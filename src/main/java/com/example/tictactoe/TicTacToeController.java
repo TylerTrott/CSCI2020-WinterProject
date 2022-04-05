@@ -45,6 +45,10 @@ public class TicTacToeController {
     @FXML
     Button signUpBtn;
 
+    @FXML
+    Button returnToMain;
+
+
     /**
      * TicTacToe SCREEN COMPONENTS
      */
@@ -99,7 +103,7 @@ public class TicTacToeController {
                 success = true;
                 FXMLLoader fxmlLoader = new FXMLLoader(TicTacToe.class.getResource("tictactoe.fxml"));
                 TTTStage.setTitle("TicTacToe");
-                Scene scene = new Scene(fxmlLoader.load(), 320, 240);
+                Scene scene = new Scene(fxmlLoader.load(), 400, 400);
                 TTTStage.setScene(scene);
                 Stage stage = (Stage) loginBtn.getScene().getWindow();
                 stage.hide();
@@ -112,18 +116,28 @@ public class TicTacToeController {
         }
     }
 
+
+
     @FXML
     protected void onLoginReturnClick() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(TicTacToe.class.getResource("TicTacToeController.fxml"));
         Stage stage = (Stage) loginBtn.getScene().getWindow();
         stage.close();
-    }
+        Scene scene = new Scene(fxmlLoader.load(), 320, 240);
+        TTTStage.setScene(scene);
+        TTTStage.show();
 
+    }
 
     @FXML
     protected void onSignUpButtonClick() throws IOException {
+
         FXMLLoader fxmlLoader = new FXMLLoader(TicTacToe.class.getResource("signup.fxml"));
         SignUpStage.setTitle("Sign Up");
         Scene scene = new Scene(fxmlLoader.load(), 320, 240);
+        Stage stage = (Stage) signUpBtn.getScene().getWindow();
+        stage.hide();
+
         SignUpStage.setScene(scene);
         SignUpStage.show();
     }
@@ -154,13 +168,25 @@ public class TicTacToeController {
             System.out.println("Login successful");
             FXMLLoader fxmlLoader = new FXMLLoader(TicTacToe.class.getResource("tictactoe.fxml"));
             TTTStage.setTitle("TicTacToe");
-            Scene scene = new Scene(fxmlLoader.load(), 500, 500);
+            Scene scene = new Scene(fxmlLoader.load(), 400, 400);
             TTTStage.setScene(scene);
             Stage stage = (Stage) submitBtn.getScene().getWindow();
             stage.hide();
             TTTStage.show();
         }
     }
+    @FXML
+    protected void onSignupReturnClick() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(TicTacToe.class.getResource("TicTacToeController.fxml"));
+        Stage stage = (Stage) returnToMain.getScene().getWindow();
+        stage.close();
+        Scene scene = new Scene(fxmlLoader.load(), 320, 240);
+        TTTStage.setScene(scene);
+        TTTStage.show();
+
+    }
+
+
 
     @FXML
     protected void onExitButtonClick() {
@@ -397,6 +423,8 @@ public class TicTacToeController {
     @FXML
     protected void startNewGame() {
         player1Turn = true;
+        clearBoard();
+
         if (player1Turn) {
             playerLabel.setText("Player 1's Turn");
             playerLabel.setVisible(true);
@@ -404,6 +432,19 @@ public class TicTacToeController {
             playerLabel.setText("Player 2's Turn");
             playerLabel.setVisible(true);
         }
+    }
+
+    private void clearBoard()
+    {
+        Btn11.setText("");
+        Btn12.setText("");
+        Btn13.setText("");
+        Btn21.setText("");
+        Btn22.setText("");
+        Btn23.setText("");
+        Btn31.setText("");
+        Btn32.setText("");
+        Btn33.setText("");
     }
 
     public void checkIfGameIsOver() {
@@ -433,6 +474,24 @@ public class TicTacToeController {
                 gameOver = true;
                 disableBtns();
             }
+            // tie game
+            else if (!Btn11.getText().equals("") &&
+                    !Btn12.getText().equals("") &&
+                    !Btn13.getText().equals("") &&
+                    !Btn21.getText().equals("") &&
+                    !Btn22.getText().equals("") &&
+                    !Btn23.getText().equals("") &&
+                    !Btn31.getText().equals("") &&
+                    !Btn32.getText().equals("") &&
+                    !Btn33.getText().equals(""))
+            {
+                playerLabel.setText("TIE GAME!");
+                gameOver = true;
+                disableBtns();
+
+            }
+
+
         }
     }
 }
