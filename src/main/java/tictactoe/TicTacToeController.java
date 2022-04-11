@@ -8,6 +8,10 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.io.*;
@@ -17,6 +21,8 @@ public class TicTacToeController {
     Stage LoginStage = new Stage();
     Stage TTTStage = new Stage();
     Stage SignUpStage = new Stage();
+
+
 
     /**
      * LOGIN SCREEN COMPONENTS
@@ -228,18 +234,31 @@ public class TicTacToeController {
     Button Btn32;
     @FXML
     Button Btn33;
+
+    // used to clean background of buttons
+    @FXML
+    Button defaultBttn;
+
     boolean gameOver = false;
 
     @FXML
     protected void onBtn11Click(){
         if (player1Turn) {
+
+            setCatImage(Btn11);
             Btn11.setText(PLAYER_ONE_SYMBOL);
+            Btn11.setTextFill(Color.TRANSPARENT);
+
             checkIfGameIsOver();
             if (!gameOver) {
                 changePlayerTurn();
             }
         } else {
+
+            setDogImage(Btn11);
             Btn11.setText(PLAYER_TWO_SYMBOL);
+            Btn11.setTextFill(Color.TRANSPARENT);
+
             checkIfGameIsOver();
             if (!gameOver) {
                 changePlayerTurn();
@@ -249,14 +268,21 @@ public class TicTacToeController {
     @FXML
     protected void onBtn12Click(){
         if (player1Turn) {
+
+            setCatImage(Btn12);
             Btn12.setText(PLAYER_ONE_SYMBOL);
+            Btn12.setTextFill(Color.TRANSPARENT);
             checkIfGameIsOver();
+
             if (!gameOver) {
                 changePlayerTurn();
             }
         } else {
+            setDogImage(Btn12);
             Btn12.setText(PLAYER_TWO_SYMBOL);
+            Btn12.setTextFill(Color.TRANSPARENT);
             checkIfGameIsOver();
+
             if (!gameOver) {
                 changePlayerTurn();
             }
@@ -265,14 +291,22 @@ public class TicTacToeController {
     @FXML
     protected void onBtn13Click(){
         if (player1Turn) {
+
+            setCatImage(Btn13);
             Btn13.setText(PLAYER_ONE_SYMBOL);
+            Btn13.setTextFill(Color.TRANSPARENT);
+
             checkIfGameIsOver();
             if (!gameOver) {
                 changePlayerTurn();
             }
         } else {
+
+            setDogImage(Btn13);
             Btn13.setText(PLAYER_TWO_SYMBOL);
+            Btn13.setTextFill(Color.TRANSPARENT);
             checkIfGameIsOver();
+
             if (!gameOver) {
                 changePlayerTurn();
             }
@@ -282,13 +316,19 @@ public class TicTacToeController {
     @FXML
     protected void onBtn21Click(){
         if (player1Turn) {
+            setCatImage(Btn21);
             Btn21.setText(PLAYER_ONE_SYMBOL);
+            Btn21.setTextFill(Color.TRANSPARENT);
             checkIfGameIsOver();
+
             if (!gameOver) {
                 changePlayerTurn();
             }
         } else {
+            setDogImage(Btn21);
             Btn21.setText(PLAYER_TWO_SYMBOL);
+            Btn21.setTextFill(Color.TRANSPARENT);
+
             checkIfGameIsOver();
             if (!gameOver) {
                 changePlayerTurn();
@@ -298,13 +338,20 @@ public class TicTacToeController {
     @FXML
     protected void onBtn22Click(){
         if (player1Turn) {
+
+            setCatImage(Btn22);
             Btn22.setText(PLAYER_ONE_SYMBOL);
+            Btn22.setTextFill(Color.TRANSPARENT);
             checkIfGameIsOver();
+
             if (!gameOver) {
                 changePlayerTurn();
             }
         } else {
+
+            setDogImage(Btn22);
             Btn22.setText(PLAYER_TWO_SYMBOL);
+            Btn22.setTextFill(Color.TRANSPARENT);
             checkIfGameIsOver();
             if (!gameOver) {
                 changePlayerTurn();
@@ -314,13 +361,20 @@ public class TicTacToeController {
     @FXML
     protected void onBtn23Click(){
         if (player1Turn) {
+
+            setCatImage(Btn23);
             Btn23.setText(PLAYER_ONE_SYMBOL);
+            Btn23.setTextFill(Color.TRANSPARENT);
+
             checkIfGameIsOver();
+
             if (!gameOver) {
                 changePlayerTurn();
             }
         } else {
+            setDogImage(Btn23);
             Btn23.setText(PLAYER_TWO_SYMBOL);
+            Btn23.setTextFill(Color.TRANSPARENT);
             checkIfGameIsOver();
             if (!gameOver) {
                 changePlayerTurn();
@@ -331,14 +385,20 @@ public class TicTacToeController {
     @FXML
     protected void onBtn31Click(){
         if (player1Turn) {
+            setCatImage(Btn31);
             Btn31.setText(PLAYER_ONE_SYMBOL);
+            Btn31.setTextFill(Color.TRANSPARENT);
             checkIfGameIsOver();
+
             if (!gameOver) {
                 changePlayerTurn();
             }
         } else {
+            setDogImage(Btn31);
             Btn31.setText(PLAYER_TWO_SYMBOL);
+            Btn31.setTextFill(Color.TRANSPARENT);
             checkIfGameIsOver();
+
             if (!gameOver) {
                 changePlayerTurn();
             }
@@ -347,14 +407,20 @@ public class TicTacToeController {
     @FXML
     protected void onBtn32Click(){
         if (player1Turn) {
+            setCatImage(Btn32);
             Btn32.setText(PLAYER_ONE_SYMBOL);
+            Btn32.setTextFill(Color.TRANSPARENT);
             checkIfGameIsOver();
+
             if (!gameOver) {
                 changePlayerTurn();
             }
         } else {
+            setDogImage(Btn32);
             Btn32.setText(PLAYER_TWO_SYMBOL);
+            Btn32.setTextFill(Color.TRANSPARENT);
             checkIfGameIsOver();
+
             if (!gameOver) {
                 changePlayerTurn();
             }
@@ -363,13 +429,18 @@ public class TicTacToeController {
     @FXML
     protected void onBtn33Click(){
         if (player1Turn) {
+            setCatImage(Btn33);
             Btn33.setText(PLAYER_ONE_SYMBOL);
+            Btn33.setTextFill(Color.TRANSPARENT);
             checkIfGameIsOver();
+
             if (!gameOver) {
                 changePlayerTurn();
             }
         } else {
+            setDogImage(Btn33);
             Btn33.setText(PLAYER_TWO_SYMBOL);
+            Btn33.setTextFill(Color.TRANSPARENT);
             checkIfGameIsOver();
             if (!gameOver) {
                 changePlayerTurn();
@@ -463,15 +534,25 @@ public class TicTacToeController {
 
     private void clearBoard()
     {
+
         Btn11.setText("");
+        setButtonBackground(Btn11);
         Btn12.setText("");
+        setButtonBackground(Btn12);
         Btn13.setText("");
+        setButtonBackground(Btn13);
         Btn21.setText("");
+        setButtonBackground(Btn21);
         Btn22.setText("");
+        setButtonBackground(Btn22);
         Btn23.setText("");
+        setButtonBackground(Btn23);
         Btn31.setText("");
+        setButtonBackground(Btn31);
         Btn32.setText("");
+        setButtonBackground(Btn32);
         Btn33.setText("");
+        setButtonBackground(Btn33);
     }
 
     public void checkIfGameIsOver() {
@@ -520,6 +601,49 @@ public class TicTacToeController {
 
 
         }
+    }
+    private void setCatImage(Button bttn)
+    {
+        Image image = new Image("/images/cat.png",bttn.getWidth(),
+                bttn.getHeight(), false, true, true);
+
+        BackgroundImage bImage = new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
+                BackgroundPosition.CENTER,
+                new BackgroundSize(bttn.getWidth(), bttn.getHeight(), true,
+                        true, true, false));
+
+        Background backGround = new Background(bImage);
+        bttn.setBackground(backGround);
+
+    }
+
+    private void setDogImage(Button bttn)
+    {
+        Image image = new Image("/images/dog.png",bttn.getWidth(),
+                bttn.getHeight(), false, true, true);
+
+        BackgroundImage bImage = new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
+                BackgroundPosition.CENTER,
+                new BackgroundSize(bttn.getWidth(), bttn.getHeight(), true,
+                        true, true, false));
+
+        Background backGround = new Background(bImage);
+        bttn.setBackground(backGround);
+    }
+
+    private void setButtonBackground(Button bttn)
+    {
+        Image image = new Image("/images/background.png",bttn.getWidth(),
+                bttn.getHeight(), false, true, true);
+
+        BackgroundImage bImage = new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
+                BackgroundPosition.CENTER,
+                new BackgroundSize(bttn.getWidth(), bttn.getHeight(), true,
+                        true, true, false));
+
+        Background backGround = new Background(bImage);
+        bttn.setBackground(backGround);
+
     }
 
 
