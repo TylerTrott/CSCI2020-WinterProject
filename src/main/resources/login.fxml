@@ -1,20 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.TextField?>
-<VBox alignment="CENTER" spacing="20.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="tictactoe.TicTacToeController">
+<VBox alignment="CENTER" spacing="20.0" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tictactoe.TicTacToeController">
     <padding>
-        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
     </padding>
-    <TextField fx:id="username" text="Enter Username"/>  <!--Username (a string) -->
-    <TextField fx:id="password" text="Enter Password"/>  <!--Password (a string)  -->
-    <Button fx:id="loginBtn" text="Login" onAction="#onLoginClick"/>
-    <Button text="Return to Main" onAction="#onLoginReturnClick"/>
+    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Login:">
+        <font>
+            <Font name="Calibri Bold" size="23.0" />
+        </font>
+    </Text>
+    <TextField fx:id="username" promptText="Enter Username">
+      <font>
+         <Font name="Calibri" size="13.0" />
+      </font></TextField>  <!--Username (a string) -->
+    <TextField fx:id="password" promptText="Enter Password">
+      <font>
+         <Font name="Calibri" size="13.0" />
+      </font></TextField>  <!--Password (a string)  -->
+    <Button fx:id="loginBtn" onAction="#onLoginClick" text="Login">
+      <font>
+         <Font name="Calibri" size="14.0" />
+      </font></Button>
+    <Button onAction="#onLoginReturnClick" text="Return to Main">
+      <font>
+         <Font name="Calibri" size="14.0" />
+      </font></Button>
 </VBox>
-
-

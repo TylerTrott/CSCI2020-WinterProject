@@ -12,6 +12,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.io.*;
@@ -130,11 +131,22 @@ public class TicTacToeController {
             }
         }
         if (!success) {
-            System.out.println("Something went wrong");
+            // Error dialogue
+            Stage errorStage = new Stage();
+            errorStage.setTitle("Error");
+            FXMLLoader fxmlLoader = new FXMLLoader(TicTacToe.class.getResource("/errorDialogue.fxml"));
+            Scene errorScene = new Scene(fxmlLoader.load());
+            errorStage.setScene(errorScene);
+            errorStage.show();
         }
     }
 
-
+    // closes the error dialogue
+    @FXML
+    public void dismissButtonAction(ActionEvent actionEvent) {
+        Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
+        stage.close();
+    }
 
     @FXML
     protected void onLoginReturnClick() throws IOException {
@@ -144,7 +156,6 @@ public class TicTacToeController {
         Scene scene = new Scene(fxmlLoader.load(), 320, 240);
         TTTStage.setScene(scene);
         TTTStage.show();
-
     }
 
     @FXML
@@ -645,6 +656,4 @@ public class TicTacToeController {
         bttn.setBackground(backGround);
 
     }
-
-
 }
