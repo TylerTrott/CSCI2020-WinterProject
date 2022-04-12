@@ -20,4 +20,4 @@ You can easily run this project by using the command in terminal:
 gradle run
 ```
 
-Or, alternatively, you can build the project by creating a run configuration under the application option utilizng the Java SDK.
+Or, alternatively, you can build the project by creating a run configuration under the application option utilizing the Java SDK.
