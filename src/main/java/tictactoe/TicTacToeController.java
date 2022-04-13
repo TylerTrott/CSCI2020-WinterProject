@@ -34,14 +34,18 @@ public class TicTacToeController {
     Button loginBtn;
 
     @FXML
-    TextField username;
+    public TextField username;
 
     @FXML
-    TextField password;
+    public TextField password;
 
     @FXML
     Button firstLoginBtn;
 
+    boolean loggedIn = false; // used to keep track of the login status
+
+    // getter for loggedIn
+    public boolean getLoggedIn() {return loggedIn;}
 
     /**
      * SIGN UP SCREEN COMPONENTS
@@ -50,10 +54,10 @@ public class TicTacToeController {
     Button submitBtn;
 
     @FXML
-    TextField signUpusername;
+    public TextField signUpusername;
 
     @FXML
-    TextField signUppassword;
+    public TextField signUppassword;
 
     @FXML
     Button signUpBtn;
@@ -88,10 +92,8 @@ public class TicTacToeController {
      */
     @FXML
     protected void onLoginButtonClick() throws IOException {
-        /**
-         * Display textField for username
-         * Display TextField for password
-         */
+//      Display textField for username
+//      Display TextField for password
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/login.fxml"));
 
         LoginStage.setTitle("Login for TicTacToe");
@@ -110,15 +112,17 @@ public class TicTacToeController {
     protected void onLoginClick() throws IOException {
         String line;
         boolean success = false;
-        BufferedReader accountReader = null;
-        String[] accountsArr = null;
+        BufferedReader accountReader;
+        String[] accountsArr;
         accountReader = new BufferedReader(new InputStreamReader(new FileInputStream("src/main/resources/accounts.csv")));
         for (line = accountReader.readLine(); line != null; line = accountReader.readLine()) {
             accountsArr = line.split(",");
-            if (accountsArr[0].equals(username.getText()) && accountsArr[1].equals(password.getText())) {
-                System.out.println("Login successful"); // Prints to console
+            if (accountsArr.length > 0 && accountsArr[0].equals(username.getText()) && accountsArr[1].equals(password.getText())) {
+                System.out.println("Login successful"); // Prints to console that login was successful
 
                 success = true; // If login is successful, set success to true
+                loggedIn = true; // Set loggedIn to true
+
                 FXMLLoader fxmlLoader = new FXMLLoader(TicTacToe.class.getResource("/tictactoe.fxml"));
                 TTTStage.setTitle("TicTacToe");
                 Scene scene = new Scene(fxmlLoader.load(), 400, 400);
@@ -160,7 +164,7 @@ public class TicTacToeController {
     @FXML
     protected void onSignUpButtonClick() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(TicTacToe.class.getResource("/signup.fxml"));
-        SignUpStage.setTitle("Sign Up");
+        SignUpStage.setTitle("Sign Up for TicTacToe");
         Scene scene = new Scene(fxmlLoader.load(), 320, 240);
         Stage stage = (Stage) signUpBtn.getScene().getWindow();
         stage.hide();
@@ -195,6 +199,7 @@ public class TicTacToeController {
         }
         if (success) {
             System.out.println("Login successful"); // Prints to console
+            loggedIn = true; // Set loggedIn to true
 
             // outputs the game screen
             FXMLLoader fxmlLoader = new FXMLLoader(TicTacToe.class.getResource("/tictactoe.fxml"));
@@ -226,6 +231,8 @@ public class TicTacToeController {
      */
     @FXML
     protected void onExitButtonClick() {
+        loggedIn = false; // game has ended; not logged in
+
         Stage stage = (Stage) MainMenuExitBtn.getScene().getWindow();
         stage.close();
     }
@@ -448,21 +455,16 @@ public class TicTacToeController {
         if (player1Turn) {
             setCatImage(Btn31);
             Btn31.setText(PLAYER_ONE_SYMBOL);
-            Btn31.setTextFill(Color.TRANSPARENT);
-            checkIfGameIsOver();
 
-            if (!gameOver) {
-                changePlayerTurn();
-            }
         } else {
             setDogImage(Btn31);
             Btn31.setText(PLAYER_TWO_SYMBOL);
-            Btn31.setTextFill(Color.TRANSPARENT);
-            checkIfGameIsOver();
 
-            if (!gameOver) {
-                changePlayerTurn();
-            }
+        }
+        Btn31.setTextFill(Color.TRANSPARENT);
+        checkIfGameIsOver();
+        if (!gameOver) {
+            changePlayerTurn();
         }
     }
 
@@ -552,6 +554,8 @@ public class TicTacToeController {
      */
     @FXML
     protected void onBackToMenuClick(ActionEvent actionEvent) throws IOException {
+        loggedIn = false; // back to menu; not logged in
+
         backToMenu.setVisible(false);
         System.out.println("Back to Menu");
         gameOver = false;
