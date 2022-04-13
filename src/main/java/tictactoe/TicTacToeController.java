@@ -1,5 +1,6 @@
 package tictactoe;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -38,7 +39,7 @@ public class TicTacToeController {
             this.socket = new Socket("localhost", 6666);
             this.client= new Client(socket);
             this.client.listenForMessage();
-            this.client.sendMessage();
+//            this.client.sendMessage();
         }
         catch(Exception e){
             e.printStackTrace();
@@ -277,7 +278,7 @@ public class TicTacToeController {
 
             //Push message to client #####################
             System.out.println("Going to push message to stack");
-            this.client.messages.push("pushed button in top left");
+            client.sendMessage("Clicked 1-1");
 
             checkIfGameIsOver();
             if (!gameOver) {
