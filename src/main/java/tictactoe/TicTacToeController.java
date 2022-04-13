@@ -9,20 +9,19 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.io.*;
 
-
 public class TicTacToeController {
+    /**
+     * The stages used for the various menus of the application.
+     */
     Stage LoginStage = new Stage();
     Stage TTTStage = new Stage();
     Stage SignUpStage = new Stage();
-
 
 
     /**
@@ -43,6 +42,7 @@ public class TicTacToeController {
     @FXML
     Button firstLoginBtn;
 
+
     /**
      * SIGN UP SCREEN COMPONENTS
      */
@@ -62,12 +62,9 @@ public class TicTacToeController {
     Button returnToMain;
 
 
-
-
     /**
      * TicTacToe SCREEN COMPONENTS
      */
-
     @FXML
     Label playerLabel;
 
@@ -77,14 +74,18 @@ public class TicTacToeController {
     @FXML
     Button backToMenu;
 
+
     /**
      * GAME LOGIC COMPONENTS
      */
-
     boolean player1Turn = false;
     String PLAYER_ONE_SYMBOL = "X";
     String PLAYER_TWO_SYMBOL = "O";
 
+    /**
+     * Displays the login screen. This screen is used to log in to the game, not sign up.
+     * @throws IOException an IOException is thrown if the login.fxml file cannot be found.
+     */
     @FXML
     protected void onLoginButtonClick() throws IOException {
         /**
@@ -101,15 +102,12 @@ public class TicTacToeController {
         LoginStage.show();
     }
 
+    /**
+     * References the accounts.csv file and checks if the username and password are valid.
+     * @throws IOException an IOException is thrown if the accounts.csv file cannot be found and/or the tictactoe.fxml file cannot be found.
+     */
     @FXML
     protected void onLoginClick() throws IOException {
-
-        /** TODO:
-         * Create CSV file that contains two columns
-         * uName and pWord
-         * Read through file and see if
-         * Uname and pWord match on any line
-         */
         String line;
         boolean success = false;
         BufferedReader accountReader = null;
@@ -118,8 +116,9 @@ public class TicTacToeController {
         for (line = accountReader.readLine(); line != null; line = accountReader.readLine()) {
             accountsArr = line.split(",");
             if (accountsArr[0].equals(username.getText()) && accountsArr[1].equals(password.getText())) {
-                System.out.println("Login successful");
-                success = true;
+                System.out.println("Login successful"); // Prints to console
+
+                success = true; // If login is successful, set success to true
                 FXMLLoader fxmlLoader = new FXMLLoader(TicTacToe.class.getResource("/tictactoe.fxml"));
                 TTTStage.setTitle("TicTacToe");
                 Scene scene = new Scene(fxmlLoader.load(), 400, 400);
@@ -130,24 +129,20 @@ public class TicTacToeController {
                 break;
             }
         }
-        if (!success) {
-            // Error dialogue
-            Stage errorStage = new Stage();
-            errorStage.setTitle("Error");
-            FXMLLoader fxmlLoader = new FXMLLoader(TicTacToe.class.getResource("/errorDialogue.fxml"));
-            Scene errorScene = new Scene(fxmlLoader.load());
-            errorStage.setScene(errorScene);
-            errorStage.show();
+        if (!success) { // Creates an error dialogue if login fails
+            System.out.println("Login failed."); // Prints to console
+
+            // outputs an error dialogue
+            Alert a = new Alert(Alert.AlertType.ERROR);
+            a.setContentText("Invalid Login. Check your username and password and try again");
+            a.show();
         }
     }
 
-    // closes the error dialogue
-    @FXML
-    public void dismissButtonAction(ActionEvent actionEvent) {
-        Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
-        stage.close();
-    }
-
+    /**
+     * Returns to the main menu from the login screen when the "Return to Menu" button is clicked.
+     * @throws IOException an IOException is thrown if the TicTacToeController.fxml file cannot be found.
+     */
     @FXML
     protected void onLoginReturnClick() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(TicTacToe.class.getResource("/TicTacToeController.fxml"));
@@ -158,9 +153,12 @@ public class TicTacToeController {
         TTTStage.show();
     }
 
+    /**
+     * Displays the sign-up screen of the application. It takes the username and password and stores it into a csv file.
+     * @throws IOException an IOException is thrown if the signup.fxml file cannot be found.
+     */
     @FXML
     protected void onSignUpButtonClick() throws IOException {
-
         FXMLLoader fxmlLoader = new FXMLLoader(TicTacToe.class.getResource("/signup.fxml"));
         SignUpStage.setTitle("Sign Up");
         Scene scene = new Scene(fxmlLoader.load(), 320, 240);
@@ -171,13 +169,13 @@ public class TicTacToeController {
         SignUpStage.show();
     }
 
+    /**
+     * Writes the username and password to the accounts.csv file. If the accounts.csv file does not exist, it creates it.
+     * If the username and password are valid, the game screen is displayed.
+     * @throws IOException an IOException is thrown if the accounts.csv cannot be found.
+     */
     @FXML
     protected void onSubmitClick() throws IOException {
-        /**
-         * TODO:
-         * Write username and password provided
-         * to accounts.csv file
-         */
         boolean success = false;
         try {
             FileWriter pw = new FileWriter("src/main/resources/accounts.csv", true);
@@ -189,12 +187,16 @@ public class TicTacToeController {
             pw.flush();
             pw.close();
         } catch (Error e) {
+            System.out.println("Could not write to file."); // Prints to console
+
             Alert a = new Alert(Alert.AlertType.ERROR);
-            a.setContentText("Something went wrong. \nPlease try again");
+            a.setContentText("Could not write to file.");
             a.show();
         }
         if (success) {
-            System.out.println("Login successful");
+            System.out.println("Login successful"); // Prints to console
+
+            // outputs the game screen
             FXMLLoader fxmlLoader = new FXMLLoader(TicTacToe.class.getResource("/tictactoe.fxml"));
             TTTStage.setTitle("TicTacToe");
             Scene scene = new Scene(fxmlLoader.load(), 400, 400);
@@ -204,6 +206,11 @@ public class TicTacToeController {
             TTTStage.show();
         }
     }
+
+    /**
+     * Returns to the main menu from the sign-up screen when the "Return to Menu" button is clicked.
+     * @throws IOException an IOException is thrown if the TicTacToeController.fxml file cannot be found
+     */
     @FXML
     protected void onSignupReturnClick() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(TicTacToe.class.getResource("/TicTacToeController.fxml"));
@@ -212,11 +219,11 @@ public class TicTacToeController {
         Scene scene = new Scene(fxmlLoader.load(), 320, 240);
         TTTStage.setScene(scene);
         TTTStage.show();
-
     }
 
-
-
+    /**
+     * Closes the application when the "Exit" button is clicked.
+     */
     @FXML
     protected void onExitButtonClick() {
         Stage stage = (Stage) MainMenuExitBtn.getScene().getWindow();
@@ -226,7 +233,6 @@ public class TicTacToeController {
     /**
      * GAME LOGIC
      */
-
     @FXML
     Button Btn11;
     @FXML
@@ -252,10 +258,15 @@ public class TicTacToeController {
 
     boolean gameOver = false;
 
+    /**
+     * Button 1,1 (row 1, column 1)
+     * This method is called when the user clicks on a tile on the tic-tac-toe board.
+     * On click, the tile is changed to an image of a cat or dog (depending on whose turn it is).
+     * It also checks to see if the game is over. If not, it switches the turn.
+     */
     @FXML
     protected void onBtn11Click(){
         if (player1Turn) {
-
             setCatImage(Btn11);
             Btn11.setText(PLAYER_ONE_SYMBOL);
             Btn11.setTextFill(Color.TRANSPARENT);
@@ -265,7 +276,6 @@ public class TicTacToeController {
                 changePlayerTurn();
             }
         } else {
-
             setDogImage(Btn11);
             Btn11.setText(PLAYER_TWO_SYMBOL);
             Btn11.setTextFill(Color.TRANSPARENT);
@@ -276,6 +286,13 @@ public class TicTacToeController {
             }
         }
     }
+
+    /**
+     * Button 1,2 (row 1, column 2)
+     * This method is called when the user clicks on a tile on the tic-tac-toe board.
+     * On click, the tile is changed to an image of a cat or dog (depending on whose turn it is).
+     * It also checks to see if the game is over. If not, it switches the turn.
+     */
     @FXML
     protected void onBtn12Click(){
         if (player1Turn) {
@@ -299,6 +316,13 @@ public class TicTacToeController {
             }
         }
     }
+
+    /**
+     * Button 1,3 (row 1, column 3)
+     * This method is called when the user clicks on a tile on the tic-tac-toe board.
+     * On click, the tile is changed to an image of a cat or dog (depending on whose turn it is).
+     * It also checks to see if the game is over. If not, it switches the turn.
+     */
     @FXML
     protected void onBtn13Click(){
         if (player1Turn) {
@@ -324,6 +348,12 @@ public class TicTacToeController {
         }
     }
 
+    /**
+     * Button 2,1 (row 2, column 1)
+     * This method is called when the user clicks on a tile on the tic-tac-toe board.
+     * On click, the tile is changed to an image of a cat or dog (depending on whose turn it is).
+     * It also checks to see if the game is over. If not, it switches the turn.
+     */
     @FXML
     protected void onBtn21Click(){
         if (player1Turn) {
@@ -346,6 +376,13 @@ public class TicTacToeController {
             }
         }
     }
+
+    /**
+     * Button 2,2 (row 2, column 2)
+     * This method is called when the user clicks on a tile on the tic-tac-toe board.
+     * On click, the tile is changed to an image of a cat or dog (depending on whose turn it is).
+     * It also checks to see if the game is over. If not, it switches the turn.
+     */
     @FXML
     protected void onBtn22Click(){
         if (player1Turn) {
@@ -369,6 +406,13 @@ public class TicTacToeController {
             }
         }
     }
+
+    /**
+     * Button 2,3 (row 2, column 3)
+     * This method is called when the user clicks on a tile on the tic-tac-toe board.
+     * On click, the tile is changed to an image of a cat or dog (depending on whose turn it is).
+     * It also checks to see if the game is over. If not, it switches the turn.
+     */
     @FXML
     protected void onBtn23Click(){
         if (player1Turn) {
@@ -393,6 +437,12 @@ public class TicTacToeController {
         }
     }
 
+    /**
+     * Button 3,1 (row 3, column 1)
+     * This method is called when the user clicks on a tile on the tic-tac-toe board.
+     * On click, the tile is changed to an image of a cat or dog (depending on whose turn it is).
+     * It also checks to see if the game is over. If not, it switches the turn.
+     */
     @FXML
     protected void onBtn31Click(){
         if (player1Turn) {
@@ -415,6 +465,13 @@ public class TicTacToeController {
             }
         }
     }
+
+    /**
+     * Button 3,2 (row 3, column 2)
+     * This method is called when the user clicks on a tile on the tic-tac-toe board.
+     * On click, the tile is changed to an image of a cat or dog (depending on whose turn it is).
+     * It also checks to see if the game is over. If not, it switches the turn.
+     */
     @FXML
     protected void onBtn32Click(){
         if (player1Turn) {
@@ -437,6 +494,13 @@ public class TicTacToeController {
             }
         }
     }
+
+    /**
+     * Button 3,3 (row 3, column 3)
+     * This method is called when the user clicks on a tile on the tic-tac-toe board.
+     * On click, the tile is changed to an image of a cat or dog (depending on whose turn it is).
+     * It also checks to see if the game is over. If not, it switches the turn.
+     */
     @FXML
     protected void onBtn33Click(){
         if (player1Turn) {
@@ -456,10 +520,14 @@ public class TicTacToeController {
             if (!gameOver) {
                 changePlayerTurn();
             }
-
         }
     }
 
+    /**
+     * This method is called when the user begins a new game (clicks the "Start Game" button).
+     * It makes the board visible, and hides the back to menu, and start game buttons.
+     * It also enables the game buttons, so the user can click on them.
+     */
     @FXML
     protected void onStartGameClick() {
         startGameBtn.setVisible(false);
@@ -477,6 +545,11 @@ public class TicTacToeController {
         startNewGame();
     }
 
+    /**
+     * This method is called when the user clicks the "Return to Menu" button.
+     * @param actionEvent The action that triggers the method.
+     * @throws IOException Throws an IOException if the FXML file cannot be found.
+     */
     @FXML
     protected void onBackToMenuClick(ActionEvent actionEvent) throws IOException {
         backToMenu.setVisible(false);
@@ -490,6 +563,10 @@ public class TicTacToeController {
         TTTStage.setScene(scene);
         TTTStage.show();
     }
+
+    /**
+     * This method enables the game buttons.
+     */
     public void enableBtns(){
         Btn11.setDisable(false);
         Btn12.setDisable(false);
@@ -502,6 +579,9 @@ public class TicTacToeController {
         Btn33.setDisable(false);
     }
 
+    /**
+     * This method disables the game buttons.
+     */
     public void disableBtns(){
         Btn11.setDisable(true);
         Btn12.setDisable(true);
@@ -516,7 +596,9 @@ public class TicTacToeController {
         backToMenu.setVisible(true);
     }
 
-
+    /**
+     * This method changes the player turn depending on whose turn it is currently.
+     */
     public void changePlayerTurn() {
         if (player1Turn) {
             // set for player 2 turn
@@ -529,6 +611,9 @@ public class TicTacToeController {
         }
     }
 
+    /**
+     * This method initializes the game. It clears the board, and sets the turn to player 1.
+     */
     @FXML
     protected void startNewGame() {
         player1Turn = true;
@@ -543,6 +628,9 @@ public class TicTacToeController {
         }
     }
 
+    /**
+     * This method clears the board. It clears the background of the buttons, and clear the text on the buttons.
+     */
     private void clearBoard()
     {
 
@@ -566,6 +654,11 @@ public class TicTacToeController {
         setButtonBackground(Btn33);
     }
 
+    /**
+     * This method contains most of the logic for the game. It contains the logic for the winning conditions for both players,
+     * and the logic for a tie. If a player wins, the winning player is displayed, the game is set to over, and the buttons are disabled.
+     * If there is a tie, the game is set to over, and the buttons are disabled.
+     */
     public void checkIfGameIsOver() {
         for (int a = 0; a < 8; a++) {
             String line = switch (a) {
@@ -609,10 +702,13 @@ public class TicTacToeController {
                 disableBtns();
 
             }
-
-
         }
     }
+
+    /**
+     * This method changes the background to an image of a cat.
+     * @param bttn the button whose background is to be changed
+     */
     private void setCatImage(Button bttn)
     {
         Image image = new Image("/images/cat.png",bttn.getWidth(),
@@ -628,6 +724,10 @@ public class TicTacToeController {
 
     }
 
+    /**
+     * This method changes the background to an image of a dog.
+     * @param bttn the button whose background is to be changed
+     */
     private void setDogImage(Button bttn)
     {
         Image image = new Image("/images/dog.png",bttn.getWidth(),
@@ -642,6 +742,10 @@ public class TicTacToeController {
         bttn.setBackground(backGround);
     }
 
+    /**
+     * This method clears the background of a button and replaces it with a blank space.
+     * @param bttn the button whose background is to be changed
+     */
     private void setButtonBackground(Button bttn)
     {
         Image image = new Image("/images/background.png",bttn.getWidth(),
@@ -654,6 +758,5 @@ public class TicTacToeController {
 
         Background backGround = new Background(bImage);
         bttn.setBackground(backGround);
-
     }
 }
