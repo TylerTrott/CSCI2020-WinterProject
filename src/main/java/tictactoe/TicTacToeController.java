@@ -15,14 +15,35 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.io.*;
+import java.net.Socket;
 
 
 public class TicTacToeController {
+
+    Socket socket;
+    Client client;
+
     Stage LoginStage = new Stage();
     Stage TTTStage = new Stage();
     Stage SignUpStage = new Stage();
 
-
+    //Default Constructor
+    public TicTacToeController(){
+        /***
+         * Initialise client conenciton to server
+         * client starts listening for messages
+         * client is ready to send messages
+         */
+        try{
+            this.socket = new Socket("localhost", 6666);
+            this.client= new Client(socket);
+            this.client.listenForMessage();
+            this.client.sendMessage();
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+    }
 
     /**
      * LOGIN SCREEN COMPONENTS
@@ -98,6 +119,7 @@ public class TicTacToeController {
         stage.hide();
         LoginStage.setScene(scene);
         LoginStage.show();
+
     }
 
     @FXML
@@ -129,6 +151,8 @@ public class TicTacToeController {
                 break;
             }
         }
+
+
         if (!success) {
             System.out.println("Something went wrong");
         }
@@ -192,6 +216,8 @@ public class TicTacToeController {
             stage.hide();
             TTTStage.show();
         }
+
+
     }
     @FXML
     protected void onSignupReturnClick() throws IOException {
@@ -248,6 +274,10 @@ public class TicTacToeController {
             setCatImage(Btn11);
             Btn11.setText(PLAYER_ONE_SYMBOL);
             Btn11.setTextFill(Color.TRANSPARENT);
+
+            //Push message to client #####################
+            System.out.println("Going to push message to stack");
+            this.client.messages.push("pushed button in top left");
 
             checkIfGameIsOver();
             if (!gameOver) {
