@@ -2,10 +2,10 @@
 Here is the repository for our Winter 2022 CSCI-2020 project.
 
 ## Group Members
-Chris J.
-Edmond L.
-Sadiq H.
-Tyler T.
+Chris J.\
+Edmond L.\
+Sadiq H.\
+Tyler T.\
 
 ## What the project is
 This project allows users to create or login to an existing account by storing information into a csv file. 
