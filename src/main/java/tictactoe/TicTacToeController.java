@@ -42,11 +42,6 @@ public class TicTacToeController {
     @FXML
     Button firstLoginBtn;
 
-    public boolean loggedIn = false; // used to keep track of the login status
-
-    // getter for loggedIn
-    public boolean getLoggedIn() {return loggedIn;}
-
     /**
      * SIGN UP SCREEN COMPONENTS
      */
@@ -54,10 +49,10 @@ public class TicTacToeController {
     Button submitBtn;
 
     @FXML
-    public TextField signUpusername;
+    TextField signUpusername;
 
     @FXML
-    public TextField signUppassword;
+    TextField signUppassword;
 
     @FXML
     Button signUpBtn;
@@ -96,8 +91,8 @@ public class TicTacToeController {
 //      Display TextField for password
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/login.fxml"));
 
-        LoginStage.setTitle("Login for TicTacToe");
-        Scene scene = new Scene(fxmlLoader.load(), 320, 240);
+        LoginStage.setTitle("Login to TicTacToe");
+        Scene scene = new Scene(fxmlLoader.load(), 285, 250);
         Stage stage = (Stage) firstLoginBtn.getScene().getWindow();
         stage.hide();
         LoginStage.setScene(scene);
@@ -121,11 +116,10 @@ public class TicTacToeController {
                 System.out.println("Login successful"); // Prints to console that login was successful
 
                 success = true; // If login is successful, set success to true
-                loggedIn = true; // Set loggedIn to true
 
                 FXMLLoader fxmlLoader = new FXMLLoader(TicTacToe.class.getResource("/tictactoe.fxml"));
                 TTTStage.setTitle("TicTacToe");
-                Scene scene = new Scene(fxmlLoader.load(), 400, 400);
+                Scene scene = new Scene(fxmlLoader.load(), 300, 425);
                 TTTStage.setScene(scene);
                 Stage stage = (Stage) loginBtn.getScene().getWindow();
                 stage.hide();
@@ -150,6 +144,7 @@ public class TicTacToeController {
     @FXML
     protected void onLoginReturnClick() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(TicTacToe.class.getResource("/TicTacToeController.fxml"));
+        TTTStage.setTitle("TicTacToe");
         Stage stage = (Stage) loginBtn.getScene().getWindow();
         stage.close();
         Scene scene = new Scene(fxmlLoader.load(), 320, 240);
@@ -165,7 +160,7 @@ public class TicTacToeController {
     protected void onSignUpButtonClick() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(TicTacToe.class.getResource("/signup.fxml"));
         SignUpStage.setTitle("Sign Up for TicTacToe");
-        Scene scene = new Scene(fxmlLoader.load(), 320, 240);
+        Scene scene = new Scene(fxmlLoader.load(), 285, 250);
         Stage stage = (Stage) signUpBtn.getScene().getWindow();
         stage.hide();
 
@@ -183,10 +178,10 @@ public class TicTacToeController {
         boolean success = false;
         try {
             FileWriter pw = new FileWriter("src/main/resources/accounts.csv", true);
+            pw.append("\n");
             pw.append(signUpusername.getText());
             pw.append(",");
             pw.append(signUppassword.getText());
-            pw.append("\n");
             success = true;
             pw.flush();
             pw.close();
@@ -199,12 +194,11 @@ public class TicTacToeController {
         }
         if (success) {
             System.out.println("Login successful"); // Prints to console
-            loggedIn = true; // Set loggedIn to true
 
             // outputs the game screen
             FXMLLoader fxmlLoader = new FXMLLoader(TicTacToe.class.getResource("/tictactoe.fxml"));
             TTTStage.setTitle("TicTacToe");
-            Scene scene = new Scene(fxmlLoader.load(), 400, 400);
+            Scene scene = new Scene(fxmlLoader.load(), 300, 425);
             TTTStage.setScene(scene);
             Stage stage = (Stage) submitBtn.getScene().getWindow();
             stage.hide();
@@ -219,9 +213,10 @@ public class TicTacToeController {
     @FXML
     protected void onSignupReturnClick() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(TicTacToe.class.getResource("/TicTacToeController.fxml"));
+        TTTStage.setTitle("TicTacToe");
         Stage stage = (Stage) returnToMain.getScene().getWindow();
         stage.close();
-        Scene scene = new Scene(fxmlLoader.load(), 320, 240);
+        Scene scene = new Scene(fxmlLoader.load(), 280, 240);
         TTTStage.setScene(scene);
         TTTStage.show();
     }
@@ -231,8 +226,6 @@ public class TicTacToeController {
      */
     @FXML
     protected void onExitButtonClick() {
-        loggedIn = false; // game has ended; not logged in
-
         Stage stage = (Stage) MainMenuExitBtn.getScene().getWindow();
         stage.close();
     }
@@ -554,8 +547,6 @@ public class TicTacToeController {
      */
     @FXML
     protected void onBackToMenuClick(ActionEvent actionEvent) throws IOException {
-        loggedIn = false; // back to menu; not logged in
-
         backToMenu.setVisible(false);
         System.out.println("Back to Menu");
         gameOver = false;

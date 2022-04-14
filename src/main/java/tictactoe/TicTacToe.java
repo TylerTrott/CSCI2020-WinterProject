@@ -16,9 +16,8 @@ public class TicTacToe extends Application {
      * @throws IOException throws an IOException if the TicTacToeController.fxml file cannot be found
      */
     public void start(Stage stage) throws IOException, NoSuchMethodException {
-
         FXMLLoader fxmlLoader = new FXMLLoader(TicTacToe.class.getResource("/TicTacToeController.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 320, 240);
+        Scene scene = new Scene(fxmlLoader.load(), 280, 340);
         stage.setTitle("TicTacToe");
         stage.setScene(scene);
         stage.show();
