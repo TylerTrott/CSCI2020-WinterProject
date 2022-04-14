@@ -24,6 +24,8 @@ public class Testing extends TicTacToeController {
 
         // setting the username and password fields within the signup class to "unitTest"
         // TODO: change the username and password fields within the signup class to "unitTest"
+        // TODO: LOGIN
+        // TODO: SIGNUP
         TicTacToeController.class.getMethod("onSubmitClick");
 
         // if the onSubmitClick method is successful, then the username and password "unitTest" have been added to the accounts.csv file, and checkAccountsFile() returns true.
@@ -58,6 +60,8 @@ public class Testing extends TicTacToeController {
         }
 
         // TODO: change the username and password fields within the login class to "unitTest"
+        // TODO: LOGIN
+        // TODO: SIGNUP
         TicTacToeController.class.getMethod("onLoginClick");
 
         // if the user is logged in, then the test is successful

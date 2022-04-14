@@ -16,11 +16,6 @@ import javafx.stage.Stage;
 import java.io.*;
 
 public class TicTacToeController {
-
-    public TicTacToeController() {
-        loggedIn = false;
-    }
-
     /**
      * The stages used for the various menus of the application.
      */
@@ -39,18 +34,10 @@ public class TicTacToeController {
     Button loginBtn;
 
     @FXML
-    public TextField username;
-
-    public TextField getUsername() {
-        return username;
-    }
+    TextField username;
 
     @FXML
-    public TextField password;
-
-    public TextField getPassword() {
-        return password;
-    }
+    TextField password;
 
     @FXML
     Button firstLoginBtn;
