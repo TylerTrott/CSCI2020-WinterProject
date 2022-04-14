@@ -12,8 +12,18 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.testng:testng:7.1.0'
-    implementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
+    implementation 'junit:junit:4.13.2'
+    implementation 'org.junit.jupiter:junit-jupiter:5.8.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
+}
+
+sourceSets {
+    test {
+        java {
+            srcDirs = ['src/test/java']
+        }
+    }
 }
 
 test {

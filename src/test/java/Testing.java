@@ -1,12 +1,14 @@
-package tictactoe;
+import static org.junit.Assert.*;
 
-import org.junit.jupiter.api.*;
-import static org.junit.jupiter.api.Assertions.*;
+import tictactoe.TicTacToe;
+import tictactoe.TicTacToeController;
+import org.junit.jupiter.api.Test;
 
+import java.awt.*;
 import java.io.*;
 import java.util.ArrayList;
 
-public class Testing {
+public class Testing extends TicTacToeController {
     /**
      * Tests the signup functionality.
       * @throws NoSuchFieldException throws NoSuchFieldException if the field "username", or "password" does not exist
@@ -14,31 +16,32 @@ public class Testing {
      * @throws IOException throws IOException if the file "accounts.csv" cannot be read.
      * @throws NoSuchMethodException throws NoSuchMethodException if the method "OnSubmitClick" does not exist
      */
-    public boolean testSignup() throws NoSuchFieldException, IllegalAccessException, IOException, NoSuchMethodException {
+    @Test
+    public void testSignup() throws NoSuchFieldException, IllegalAccessException, IOException, NoSuchMethodException {
+
         // reading the accounts.csv file to ensure that the username and password "unitTest" are not in the file
         checkAccountsFileAndRemove("unitTest", "unitTest");
 
         // setting the username and password fields within the signup class to "unitTest"
-        TicTacToeController.class.getField("signUpusername").set(null, "unitTest");
-        TicTacToeController.class.getField("signUppassword").set(null, "unitTest");
-        TicTacToeController.class.getDeclaredMethod("onSubmitClick"); // calling the method "onSubmitClick", which is the method that is being tested
+        // TODO: change the username and password fields within the signup class to "unitTest"
+        TicTacToeController.class.getMethod("onSubmitClick");
 
         // if the onSubmitClick method is successful, then the username and password "unitTest" have been added to the accounts.csv file, and checkAccountsFile() returns true.
         // If this is the case, the test is successful.
-        return checkAccountsFileAndRemove("unitTest", "unitTest");
+        System.out.print("SIGNUP SUCCESS!"); // ! DEBUGGING !
+        assertTrue(checkAccountsFileAndRemove("unitTest", "unitTest"));
     }
 
     /**
      * Tests the login functionality.
-     * @return true if the login functionality is correct, false otherwise.
-     * @throws NoSuchFieldException throws NoSuchFieldException if the field "username", or "password" does not exist
-     * @throws IllegalAccessException throws IllegalAccessException if the field "username", or "password" is not accessible
      * @throws IOException throws IOException if the file "accounts.csv" cannot be read.
      * @throws NoSuchMethodException throws NoSuchMethodException if the method "OnSubmitClick" does not exist
      */
-    public boolean testLogin() throws NoSuchFieldException, IllegalAccessException, IOException, NoSuchMethodException {
+    @Test
+    public void testLogin() throws IOException, NoSuchMethodException, NoSuchFieldException, IllegalAccessException {
+        TicTacToeController ticTacToeController = new TicTacToeController();
         // reading the accounts.csv file to see if the username and password "unitTest" are in the file
-        BufferedReader br = new BufferedReader(new FileReader("accounts.csv"));
+        BufferedReader br = new BufferedReader(new FileReader("src/main/resources/accounts.csv"));
         String line;
         boolean valueFound = false; // boolean value to determine if the username and password "unitTest" are in the file
         while ((line = br.readLine()) != null) {
@@ -48,12 +51,18 @@ public class Testing {
                 break;
             }
         } if (!valueFound) { // if the username and password "unitTest" are not in the file, write them to the file
-            BufferedWriter bw = new BufferedWriter(new FileWriter("accounts.csv", true));
+            BufferedWriter bw = new BufferedWriter(new FileWriter("src/main/resources/accounts.csv", true));
+            bw.newLine();
             bw.write("unitTest,unitTest");
+            bw.close();
         }
 
+        // TODO: change the username and password fields within the login class to "unitTest"
+        TicTacToeController.class.getMethod("onLoginClick");
+
         // if the user is logged in, then the test is successful
-        return TicTacToeController.class.getMethod("getLoggedIn").equals(true);
+        System.out.print("LOGIN SUCCESS!"); // ! DEBUGGING !
+        assertEquals(true, TicTacToeController.class.getMethod("getLoggedIn").equals(true));
     }
 
     /**
@@ -62,7 +71,7 @@ public class Testing {
      * @throws IOException throws IOException if the file "accounts.csv" cannot be found.
      */
     private boolean checkAccountsFileAndRemove(String username, String password) throws IOException {
-        BufferedReader br = new BufferedReader(new FileReader("/accounts.csv"));
+        BufferedReader br = new BufferedReader(new FileReader("src/main/resources/accounts.csv"));
         String line;
         boolean occurs = false; // if the username and password "unitTest" are in the file, then occurs will be true
         ArrayList<String> accountData = new ArrayList<>(); // arraylist to store the username and password that are being read from the file
@@ -81,16 +90,16 @@ public class Testing {
         br.close(); // closing the file
 
         if (occurs) { // if the username and password "unitTest" have been found, then remove the username and password "unitTest" from the file
-            BufferedWriter bw = new BufferedWriter(new FileWriter("/newaccounts.csv"));
+            BufferedWriter bw = new BufferedWriter(new FileWriter("src/main/resources/newaccounts.csv"));
             for (int i = 0; i < accountData.size(); i++) {
                 if (i != lineNumber) {
                     bw.write(accountData.get(i));
                 }
             }
             bw.close(); // closing the file
-            File oldFile = new File("/accounts.csv");
+            File oldFile = new File("src/main/resources/accounts.csv");
             oldFile.delete(); // deleting the old file
-            File newFile = new File("/newaccounts.csv");
+            File newFile = new File("src/main/resources/newaccounts.csv");
             newFile.renameTo(oldFile); // renaming the new file to the old file
 
             return true; // if the username and password "unitTest" have been found, then return true
@@ -99,22 +108,9 @@ public class Testing {
         }
     }
 
-    public class TestController {
-        /**
-         * Tests the onSubmitClick method in the TicTacToeController class.
-         * @throws NoSuchMethodException throws NoSuchMethodException if the method "OnSubmitClick" does not exist
-         * @throws IOException throws IOException if the file "accounts.csv" cannot be found
-         * @throws NoSuchFieldException throws NoSuchFieldException if the field "signUpusername" does not exist
-         * @throws IllegalAccessException throws IllegalAccessException if the field "signUpusername" cannot be accessed
-         */
-        @Test
-        public void checkSignup() throws NoSuchMethodException, IOException, NoSuchFieldException, IllegalAccessException {
-            assertTrue(testSignup()); // tests the signup method
-        }
-
-        @Test
-        public void checkLogin() throws NoSuchMethodException, IOException, NoSuchFieldException, IllegalAccessException {
-            assertTrue(testLogin()); // tests the login method
-        }
-    }
+    // checks the game logic
+//    @Test
+//    public boolean checkLogic() {
+//
+//    }
 }

@@ -16,6 +16,11 @@ import javafx.stage.Stage;
 import java.io.*;
 
 public class TicTacToeController {
+
+    public TicTacToeController() {
+        loggedIn = false;
+    }
+
     /**
      * The stages used for the various menus of the application.
      */
@@ -36,13 +41,21 @@ public class TicTacToeController {
     @FXML
     public TextField username;
 
+    public TextField getUsername() {
+        return username;
+    }
+
     @FXML
     public TextField password;
+
+    public TextField getPassword() {
+        return password;
+    }
 
     @FXML
     Button firstLoginBtn;
 
-    boolean loggedIn = false; // used to keep track of the login status
+    public boolean loggedIn = false; // used to keep track of the login status
 
     // getter for loggedIn
     public boolean getLoggedIn() {return loggedIn;}
@@ -179,7 +192,7 @@ public class TicTacToeController {
      * @throws IOException an IOException is thrown if the accounts.csv cannot be found.
      */
     @FXML
-    protected void onSubmitClick() throws IOException {
+    public void onSubmitClick() throws IOException {
         boolean success = false;
         try {
             FileWriter pw = new FileWriter("src/main/resources/accounts.csv", true);
@@ -704,7 +717,6 @@ public class TicTacToeController {
                 playerLabel.setText("TIE GAME!");
                 gameOver = true;
                 disableBtns();
-
             }
         }
     }
