@@ -10,7 +10,7 @@ Tyler T.
 ## What the project is
 This project allows users to create or login to an existing account by storing information into a csv file. 
 
-Once they have successfully authenticated, they are taken to the start game screen where you can then startt eh actual Tic-Tac-Toe game. 
+Once they have successfully authenticated, they are taken to the start game screen where you can then start the actual Tic-Tac-Toe game. 
 Players take turn making a move on the board as they are prompted on the top of the window as to whose turn it is. 
 
 There is an in game chat feature which uses multithreading to allow players to communicate with one another during the game.
