@@ -552,7 +552,6 @@ public class TicTacToeController {
      */
     @FXML
     protected void onBackToMenuClick(ActionEvent actionEvent) throws IOException {
-        scanner.close();
         System.out.println("connection to server lost...");
         backToMenu.setVisible(false);
         System.out.println("Back to Menu");
@@ -764,17 +763,18 @@ public class TicTacToeController {
     @FXML
     Button multiplayerBtn;
 
+    @FXML
+    Stage chatStage = new Stage();
+
     public void onMultiplayerClick(ActionEvent actionEvent) throws IOException {
         // outputs the game screen
         FXMLLoader fxmlLoader = new FXMLLoader(TicTacToe.class.getResource("/multiTTT.fxml"));
-        TTTStage.setTitle("TicTacToe");
+        chatStage.setTitle("Chat");
         Scene scene = new Scene(fxmlLoader.load(), 300, 425);
-        TTTStage.setScene(scene);
+        chatStage.setScene(scene);
         Stage stage = (Stage) multiplayerBtn.getScene().getWindow();
         stage.hide();
-        TTTStage.show();
-        initServer();
-        connect();
+        chatStage.show();
     }
 
     public void onChooseGameReturnClick(ActionEvent actionEvent) {

@@ -9,16 +9,16 @@
     <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
     </padding>
-    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Choose game type:">
+    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Choose Something To Do:">
         <font>
             <Font name="Calibri Bold" size="23.0" />
         </font>
     </Text>
-    <Button fx:id="localBtn" onAction="#onLocalClick" text="Local Play">
+    <Button fx:id="localBtn" onAction="#onLocalClick" text="Tic Tac Toe (Local)">
         <font>
             <Font name="Calibri" size="14.0" />
         </font></Button>
-    <Button fx:id="multiplayerBtn" onAction="#onMultiplayerClick" text="Multiplayer">
+    <Button fx:id="multiplayerBtn" onAction="#onMultiplayerClick" text="Chat with a Friend">
         <font>
             <Font name="Calibri" size="14.0" />
         </font></Button>
