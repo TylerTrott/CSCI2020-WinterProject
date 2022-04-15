@@ -1,8 +1,11 @@
 package tictactoe;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Group;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -13,12 +16,15 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+import java.awt.*;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Scanner;
+import java.util.function.Consumer;
 
-public class TicTacToeController {
+public abstract class TicTacToeController {
+    Class c = TicTacToeController.class;
     /**
      * The stages used for the various menus of the application.
      */
@@ -85,6 +91,13 @@ public class TicTacToeController {
     boolean player1Turn = false;
     String PLAYER_ONE_SYMBOL = "X";
     String PLAYER_TWO_SYMBOL = "O";
+
+    @FXML
+    public TextArea sendTxt;
+
+    public TicTacToeController(Consumer<Serializable> onReceiveCallback) {
+    }
+
 
     /**
      * Displays the login screen. This screen is used to log in to the game, not sign up.
@@ -766,11 +779,14 @@ public class TicTacToeController {
     @FXML
     Stage chatStage = new Stage();
 
-    public void onMultiplayerClick(ActionEvent actionEvent) throws IOException {
+    public void onMultiplayerClick(ActionEvent actionEvent) throws Exception {
         // outputs the game screen
+        initializeChat();
+
         FXMLLoader fxmlLoader = new FXMLLoader(TicTacToe.class.getResource("/multiTTT.fxml"));
         chatStage.setTitle("Chat");
-        Scene scene = new Scene(fxmlLoader.load(), 300, 425);
+        Group root = new Group(createContent(), fxmlLoader.load());
+        Scene scene = new Scene(root, 300, 425);
         chatStage.setScene(scene);
         Stage stage = (Stage) multiplayerBtn.getScene().getWindow();
         stage.hide();
@@ -792,85 +808,181 @@ public class TicTacToeController {
         TTTStage.show();
     }
 
-    private static class ClientHandler implements Runnable{
+    private ConnectionThread connThread = new ConnectionThread();
 
-        private final Socket clientSock;
+    private Consumer<Serializable> onReceiveCallback;
 
-        public ClientHandler(Socket socket){
-            clientSock = socket;
-        }
 
-        public void run(){
+    private chatServer createServer(){
+        return new chatServer(55555, data -> {
+            Platform.runLater(() ->{
+                sendTxt.append(data.toString() + "\n");
+            });
+        });
+    }
 
-            BufferedReader inStream = null;
+    private chatClient createClient(){
+        return new chatClient("localhost", 55555, data -> {
+
+        });
+    }
+
+    java.awt.TextField input = new java.awt.TextField();
+
+    private boolean isServer = true;
+
+    //private chat connection = isServer ? createServer() : createClient();
+
+    @FXML
+    private Parent createContent() throws Exception {
+        input.addActionListener(event -> {
+            String message = isServer ? "Server: " : "Client: ";
+            message += input.getText();
+            sendTxt.append(message + "\n");
             try {
-                inStream = new BufferedReader(new InputStreamReader(clientSock.getInputStream()));
-
-                String message;
-                while ((message = inStream.readLine()) != null){
-                    System.out.println( "Sent from client: " + message);
-                }
+                send(message);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
             }
-            catch(IOException e){
-                e.printStackTrace();
-            }
-            finally {
-                try {
-                    inStream.close();
-                    clientSock.close();
-                }
-                catch(IOException e){
-                    e.printStackTrace();
-                }
-            }
-        }
-
+        });
+        return null;
     }
-    public void initServer(){
-        ServerSocket serve = null;
-        try {
-            serve = new ServerSocket(6666); //0 -> lets your OS select a port; port > 1024
-            serve.setReuseAddress(true);
-            System.out.println("Starting server...");
-            System.out.println("Waiting for client connection...");
-            connect();
-//            serve.accept();
-            while(true){
-                Socket sock = serve.accept();
-                System.out.println("Client is connected " + sock.getInetAddress().getHostAddress()); //this will display the host address of client
-                ClientHandler client = new ClientHandler(sock);
-                new Thread(client).start();
-            }
-        }
-        catch(IOException e){
-            e.printStackTrace();
-        }
-        try {
-            serve.close();
-        }
-        catch(IOException e){
-            e.printStackTrace();
-        }
+    @FXML
+    public void initializeChat() throws Exception{
+        StartConnection();
     }
 
-    protected void connect(){
-        try (Socket sock = new Socket("localhost", 6666)){
-            System.out.println("Connected to server...");
-            System.out.println("Input \"done\" to terminate connection...");
-            //get input from the user to send as a message
-            PrintWriter dout = new PrintWriter(sock.getOutputStream(), true);
-            Scanner scanner = new Scanner(System.in);
-            String message = "";
-            while(!message.equals("done")){
-                message = scanner.nextLine();
-                dout.println(message);
-            }
-            scanner.close();
-        }
-        catch(IOException e){
-            e.printStackTrace();
-        }
-        System.out.println("Connection terminated...");
+    public void stop() throws Exception{
+       closeConnection();
+    }
 
+    public void StartConnection() throws Exception {
+        connThread.setDaemon(true);
+        connThread.start();
+    }
+
+    public void send(Serializable data) throws Exception {
+        connThread.setDaemon(true);
+        connThread.out.writeObject(data);
+    }
+
+    public void closeConnection() throws Exception {
+        connThread.setDaemon(true);
+        connThread.socket.close();
+    }
+
+    protected abstract boolean isServer();
+    protected abstract String getIP();
+    protected abstract int getPort();
+
+    public abstract void onSendMsgClick(ActionEvent actionEvent);
+
+    public abstract void onChatReturnClick(ActionEvent actionEvent);
+
+    private class ConnectionThread extends Thread {
+        private Socket socket;
+        private ObjectOutputStream out;
+        @Override
+        public void run(){
+            try(ServerSocket server = isServer() ? new ServerSocket(getPort()) : null;
+                Socket socket = isServer() ? server.accept() : new Socket(getIP(), getPort());
+                ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+                ObjectInputStream in = new ObjectInputStream(socket.getInputStream())) {
+                this.socket = socket;
+                this.out = out;
+                socket.setTcpNoDelay(true);
+                while (true){
+                    Serializable data = (Serializable) in.readObject();
+                    onReceiveCallback.accept(data);
+                }
+            } catch (Exception e) {
+                onReceiveCallback.accept("Connection Closed");
+            }
+        }
     }
 }
+
+
+
+//    private static class ClientHandler implements Runnable{
+//
+//        private final Socket clientSock;
+//
+//        public ClientHandler(Socket socket){
+//            clientSock = socket;
+//        }
+//
+//        public void run(){
+//
+//            BufferedReader inStream = null;
+//            try {
+//                inStream = new BufferedReader(new InputStreamReader(clientSock.getInputStream()));
+//
+//                String message;
+//                while ((message = inStream.readLine()) != null){
+//                    System.out.println( "Sent from client: " + message);
+//                }
+//            }
+//            catch(IOException e){
+//                e.printStackTrace();
+//            }
+//            finally {
+//                try {
+//                    inStream.close();
+//                    clientSock.close();
+//                }
+//                catch(IOException e){
+//                    e.printStackTrace();
+//                }
+//            }
+//        }
+//
+//    }
+////    public void initServer(){
+////        ServerSocket serve = null;
+////        try {
+////            serve = new ServerSocket(6666); //0 -> lets your OS select a port; port > 1024
+////            serve.setReuseAddress(true);
+////            System.out.println("Starting server...");
+////            System.out.println("Waiting for client connection...");
+////            connect();
+//////            serve.accept();
+////            while(true){
+////                Socket sock = serve.accept();
+////                System.out.println("Client is connected " + sock.getInetAddress().getHostAddress()); //this will display the host address of client
+////                ClientHandler client = new ClientHandler(sock);
+////                new Thread(client).start();
+////            }
+////        }
+////        catch(IOException e){
+////            e.printStackTrace();
+////        }
+////        try {
+////            serve.close();
+////        }
+////        catch(IOException e){
+////            e.printStackTrace();
+////        }
+////    }
+////
+////    protected void connect(){
+////        try (Socket sock = new Socket("localhost", 6666)){
+////            System.out.println("Connected to server...");
+////            System.out.println("Input \"done\" to terminate connection...");
+////            //get input from the user to send as a message
+////            PrintWriter dout = new PrintWriter(sock.getOutputStream(), true);
+////            Scanner scanner = new Scanner(System.in);
+////            String message = "";
+////            while(!message.equals("done")){
+////                message = scanner.nextLine();
+////                dout.println(message);
+////            }
+////            scanner.close();
+//        }
+//        catch(IOException e){
+//            e.printStackTrace();
+//        }
+//        System.out.println("Connection terminated...");
+//
+//    }
+//}

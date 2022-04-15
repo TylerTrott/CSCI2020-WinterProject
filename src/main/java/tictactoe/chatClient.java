@@ -5,7 +5,7 @@ import javafx.event.ActionEvent;
 import java.io.Serializable;
 import java.util.function.Consumer;
 
-public class chatClient extends chat{
+public class chatClient extends TicTacToeController{
 private String ip;
 private int port;
 

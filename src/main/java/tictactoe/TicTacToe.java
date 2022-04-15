@@ -12,7 +12,6 @@ import java.awt.*;
 import java.io.IOException;
 
 public class TicTacToe extends Application {
-    public static Stage stage;
 
     /**
      * Starts the application
@@ -20,14 +19,13 @@ public class TicTacToe extends Application {
      * @throws IOException throws an IOException if the TicTacToeController.fxml file cannot be found
      */
 
-    public void start(Stage stage) throws IOException, NoSuchMethodException {
+    public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(TicTacToe.class.getResource("/TicTacToeController.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 280, 340);
         stage.setTitle("TicTacToe");
         stage.setScene(scene);
         stage.show();
     }
-
 
     /**
      * Launches the application
