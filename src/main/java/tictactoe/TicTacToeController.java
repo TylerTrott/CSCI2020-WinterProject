@@ -14,6 +14,9 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.io.*;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.Scanner;
 
 public class TicTacToeController {
     /**
@@ -22,6 +25,8 @@ public class TicTacToeController {
     Stage LoginStage = new Stage();
     Stage TTTStage = new Stage();
     Stage SignUpStage = new Stage();
+
+    Stage selectGameType = new Stage();
 
 
     /**
@@ -117,13 +122,13 @@ public class TicTacToeController {
 
                 success = true; // If login is successful, set success to true
 
-                FXMLLoader fxmlLoader = new FXMLLoader(TicTacToe.class.getResource("/tictactoe.fxml"));
-                TTTStage.setTitle("TicTacToe");
+                FXMLLoader fxmlLoader = new FXMLLoader(TicTacToe.class.getResource("/chooseGame.fxml"));
+                selectGameType.setTitle("Choose Game Type");
                 Scene scene = new Scene(fxmlLoader.load(), 300, 425);
-                TTTStage.setScene(scene);
+                selectGameType.setScene(scene);
                 Stage stage = (Stage) loginBtn.getScene().getWindow();
                 stage.hide();
-                TTTStage.show();
+                selectGameType.show();
                 break;
             }
         }
@@ -196,13 +201,13 @@ public class TicTacToeController {
             System.out.println("Login successful"); // Prints to console
 
             // outputs the game screen
-            FXMLLoader fxmlLoader = new FXMLLoader(TicTacToe.class.getResource("/tictactoe.fxml"));
-            TTTStage.setTitle("TicTacToe");
+            FXMLLoader fxmlLoader = new FXMLLoader(TicTacToe.class.getResource("/chooseGame.fxml"));
+            selectGameType.setTitle("Choose Game Type");
             Scene scene = new Scene(fxmlLoader.load(), 300, 425);
-            TTTStage.setScene(scene);
+            selectGameType.setScene(scene);
             Stage stage = (Stage) submitBtn.getScene().getWindow();
             stage.hide();
-            TTTStage.show();
+            selectGameType.show();
         }
     }
 
@@ -547,6 +552,8 @@ public class TicTacToeController {
      */
     @FXML
     protected void onBackToMenuClick(ActionEvent actionEvent) throws IOException {
+        scanner.close();
+        System.out.println("connection to server lost...");
         backToMenu.setVisible(false);
         System.out.println("Back to Menu");
         gameOver = false;
@@ -752,5 +759,118 @@ public class TicTacToeController {
 
         Background backGround = new Background(bImage);
         bttn.setBackground(backGround);
+    }
+
+    @FXML
+    Button multiplayerBtn;
+
+    public void onMultiplayerClick(ActionEvent actionEvent) throws IOException {
+        // outputs the game screen
+        FXMLLoader fxmlLoader = new FXMLLoader(TicTacToe.class.getResource("/multiTTT.fxml"));
+        TTTStage.setTitle("TicTacToe");
+        Scene scene = new Scene(fxmlLoader.load(), 300, 425);
+        TTTStage.setScene(scene);
+        Stage stage = (Stage) multiplayerBtn.getScene().getWindow();
+        stage.hide();
+        TTTStage.show();
+        initServer();
+        connect();
+    }
+
+    public void onChooseGameReturnClick(ActionEvent actionEvent) {
+    }
+    @FXML
+    Button localBtn;
+    public void onLocalClick() throws IOException {
+        // outputs the game screen
+        FXMLLoader fxmlLoader = new FXMLLoader(TicTacToe.class.getResource("/tictactoe.fxml"));
+        TTTStage.setTitle("TicTacToe");
+        Scene scene = new Scene(fxmlLoader.load(), 300, 425);
+        TTTStage.setScene(scene);
+        Stage stage = (Stage) localBtn.getScene().getWindow();
+        stage.hide();
+        TTTStage.show();
+    }
+
+    private static class ClientHandler implements Runnable{
+
+        private final Socket clientSock;
+
+        public ClientHandler(Socket socket){
+            clientSock = socket;
+        }
+
+        public void run(){
+
+            BufferedReader inStream = null;
+            try {
+                inStream = new BufferedReader(new InputStreamReader(clientSock.getInputStream()));
+
+                String message;
+                while ((message = inStream.readLine()) != null){
+                    System.out.println( "Sent from client: " + message);
+                }
+            }
+            catch(IOException e){
+                e.printStackTrace();
+            }
+            finally {
+                try {
+                    inStream.close();
+                    clientSock.close();
+                }
+                catch(IOException e){
+                    e.printStackTrace();
+                }
+            }
+        }
+
+    }
+    public void initServer(){
+        ServerSocket serve = null;
+        try {
+            serve = new ServerSocket(6666); //0 -> lets your OS select a port; port > 1024
+            serve.setReuseAddress(true);
+            System.out.println("Starting server...");
+            System.out.println("Waiting for client connection...");
+            connect();
+//            serve.accept();
+            while(true){
+                Socket sock = serve.accept();
+                System.out.println("Client is connected " + sock.getInetAddress().getHostAddress()); //this will display the host address of client
+                ClientHandler client = new ClientHandler(sock);
+                new Thread(client).start();
+            }
+        }
+        catch(IOException e){
+            e.printStackTrace();
+        }
+        try {
+            serve.close();
+        }
+        catch(IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    protected void connect(){
+        try (Socket sock = new Socket("localhost", 6666)){
+            System.out.println("Connected to server...");
+            System.out.println("Input \"done\" to terminate connection...");
+            //get input from the user to send as a message
+            PrintWriter dout = new PrintWriter(sock.getOutputStream(), true);
+            Scanner scanner = new Scanner(System.in);
+            String message = "";
+            while(!message.equals("done")){
+                message = scanner.nextLine();
+                dout.println(message);
+            }
+            scanner.close();
+        }
+        catch(IOException e){
+            e.printStackTrace();
+        }
+        System.out.println("Connection terminated...");
+
     }
 }
